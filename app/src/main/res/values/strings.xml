@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">Audio_led</string>
+    <string name="discoverable">Make discoverable</string>
+    <string name="insecure_connect">Connect a device - Insecure</string>
+    <string name="none_found">No devices found</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="not_connected">You are not connected to a device</string>
+
+    <string name="button_scan">Scan for devices</string>
+    <string name="scanning">scanning for devices…</string>
+    <string name="secure_connect">Connect a device - Secure</string>
+    <string name="select_device">select a device to connect</string>
+    <string name="send">Send</string>
+    <string name="title_connected_to">connected to %1$s</string>
+    <string name="title_connecting">connecting…</string>
+    <string name="title_not_connected">not connected</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="title_paired_devices">Paired Devices</string>
+
+    <string name="get_record_permission">Hey, we need access to microphone to record your feedback.</string>
+    <string name="get_storage_permission">Hey. We need storage permission to record your feedback.</string>
+    <string name="accept">ACCEPT</string>
+    <string name="deny">DENY</string>
+    <string name="exit">Exit App</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
+
+    <string-array name="audio_source" translatable="false">
+        <item>VOICE_RECOGNITION</item>
+        <item>DEFAULT</item>
+        <item>MIC</item>
+        <item>VOICE_UPLINK</item>
+        <item>VOICE_DOWNLINK</item>
+        <item>VOICE_CALL</item>
+        <item>CAMCORDER</item>
+        <item>test signal 1\n\t 440Hz @ -6dB</item>
+        <item>test signal 2\n\t 625Hz @ -6dB\n +1875Hz @ -12dB</item>
+        <item>white noise</item>
+    </string-array>
+    <string-array name="audio_source_id" translatable="false">
+        <item>6</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>1000</item>
+        <item>1001</item>
+        <item>1002</item>
+    </string-array>
+</resources>

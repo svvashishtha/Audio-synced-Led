@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <test.so.audio_led.utils.WaveformView
+        android:id="@+id/waveform_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height_96"
+        android:background="#00000000"
+        app:mode="RECORDING" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/record_button"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/item_height_48"
+            android:layout_margin="@dimen/margin_medium"
+            android:layout_weight="1.0"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_music_note_black_48dp" />
+
+        <ImageView
+            android:id="@+id/stop_button"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/item_height_48"
+            android:layout_margin="@dimen/margin_medium"
+            android:layout_weight="1.0"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_stop_black_48dp" />
+    </LinearLayout>
+
+
+</LinearLayout>

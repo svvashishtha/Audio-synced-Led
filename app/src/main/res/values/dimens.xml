@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_midsmall">12dp</dimen>
+    <dimen name="margin_mini">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_xlarge">36dp</dimen>
+    <dimen name="margin_xxlarge">48dp</dimen>
+
+    <dimen name="item_height_24">24dp</dimen>
+    <dimen name="item_height_36">36dp</dimen>
+    <dimen name="item_height_48">48dp</dimen>
+    <dimen name="item_height_64">64dp</dimen>
+    <dimen name="item_height_96">96dp</dimen>
+</resources>
