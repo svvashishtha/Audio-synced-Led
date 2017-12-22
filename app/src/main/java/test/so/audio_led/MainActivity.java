@@ -23,11 +23,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 
 import test.so.audio_led.extras.Constants;
 import test.so.audio_led.fft.AnalyzerParameters;
@@ -38,10 +41,12 @@ import test.so.audio_led.utils.WaveformView;
 public class MainActivity extends AppCompatActivity implements AudioDataReceivedListener, Constants,
         GetPermissionDialogFragment.DialogInteractionListener {
 
+    private static String mConnectedDeviceName;
+    private static String mConnectedDeviceAddress;
     private final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private final int REQUEST_ENABLE_BT = 3;
-    private final int REQUEST_RECORD_AUDIO = 13;
+    private final Handler mHandler = new CustomHandler(this);
     public Context context;
     public JSONArray soundValuesJson;
     public ImageView stopButton;
@@ -49,70 +54,17 @@ public class MainActivity extends AppCompatActivity implements AudioDataReceived
     WaveformView waveformView;
     private AnalyzerParameters analyzerParam;
     private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothAdapter mBtAdapter;
-    private String mConnectedDeviceAddress;
-    private String mConnectedDeviceName;
-    private StringBuffer mOutStringBuffer;
     private ImageView recordButton;
     private BluetoothService mService;
     private String TAG = "MainActivity";
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
+    private TextView status;
 
-                        case BluetoothService.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                            break;
-                        case BluetoothService.STATE_CONNECTING:
-                            setStatus(R.string.title_connecting);
-                            break;
-                        case BluetoothService.STATE_LISTEN:
-                        case BluetoothService.STATE_NONE:
-                            setStatus(R.string.title_not_connected);
-                            break;
-                    }
-                    break;
-                case Constants.MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
-                    Log.d(TAG, "message sent: " + writeMessage);
-                    break;
-                case Constants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    Log.d(TAG, "message read: " + readMessage);
-                    break;
-                case Constants.MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
-                    mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                    mConnectedDeviceAddress = msg.getData().getString(Constants.DEVICE_ADDRESS);
-
-                    if (null != context) {
-                        Toast.makeText(context, "Connected to "
-                                + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    if (null != context) {
-                        Toast.makeText(context, msg.getData().getString(Constants.TOAST),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-            }
-        }
-    };
-
-    private void setStatus(int resId) {
-
+    public void setStatus(int resId) {
+        status.setText(resId);
     }
 
-    private void setStatus(String msg) {
-
+    public void setStatus(String msg) {
+        status.setText(msg);
     }
 
     @Override
@@ -143,9 +95,6 @@ public class MainActivity extends AppCompatActivity implements AudioDataReceived
         Log.d(TAG, "setupChat()");
 
         mService = new BluetoothService(context, mHandler);
-
-        // Initialize the buffer for outgoing messages
-        mOutStringBuffer = new StringBuffer("");
     }
 
     @Override
@@ -380,5 +329,65 @@ public class MainActivity extends AppCompatActivity implements AudioDataReceived
     @Override
     public void requestPermissionAgain(String permissionType) {
         requestPermissions();
+    }
+
+    private static class CustomHandler extends Handler {
+        private final WeakReference<MainActivity> mActivity;
+        String TAG = "CustomHandler";
+
+        private CustomHandler(MainActivity mActivity) {
+            this.mActivity = new WeakReference<MainActivity>(mActivity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity mainActivity = mActivity.get();
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+
+                        case BluetoothService.STATE_CONNECTED:
+                            mainActivity.setStatus(mainActivity.getString(R.string.title_connected_to, mConnectedDeviceName));
+                            break;
+                        case BluetoothService.STATE_CONNECTING:
+                            mainActivity.setStatus(R.string.title_connecting);
+                            break;
+                        case BluetoothService.STATE_LISTEN:
+                        case BluetoothService.STATE_NONE:
+                            mainActivity.setStatus(R.string.title_not_connected);
+                            break;
+                    }
+                    break;
+                case Constants.MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    Log.d(TAG, "message sent: " + writeMessage);
+                    break;
+                case Constants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    Log.d(TAG, "message read: " + readMessage);
+                    break;
+                case Constants.MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+                    mConnectedDeviceAddress = msg.getData().getString(Constants.DEVICE_ADDRESS);
+
+                    if (null != mainActivity) {
+                        Toast.makeText(mainActivity, "Connected to "
+                                + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case Constants.MESSAGE_TOAST:
+                    if (null != mainActivity) {
+                        Toast.makeText(mainActivity, msg.getData().getString(Constants.TOAST),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+            }
+        }
+
     }
 }
